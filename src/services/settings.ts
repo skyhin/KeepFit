@@ -138,7 +138,7 @@ export async function getSettings(): Promise<UserSettings | null> {
   if (settings) {
     cache.setSettings(settings);
   }
-  return settings;
+  return settings ?? null;
 }
 
 /**
