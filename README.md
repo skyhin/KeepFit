@@ -257,21 +257,6 @@ A mobile-first Web App built with Next.js 14+ that uses AI vision to identify fo
 - **Runtime**: Vercel Edge Functions
 - **Stream Processing**: Custom streaming response parser
 
-## Design System
-
-- **Style**: Apple Health minimalist dark mode (Dark Mode Only)
-- **Color Palette**: 
-  - Background: `#000000`
-  - Card: `#1C1C1E`
-  - Deficit (Healthy): `#30D158`
-  - Surplus (Warning): `#FF453A`
-- **Interactions**: 
-  - Button click: `scale: 0.95` bounce effect
-  - Number changes: CountUp scroll animation (with decimal support)
-  - Page transitions: Smooth Slide Over effect
-  - Progress display: Circular progress bar animation with multi-loop support
-  - Notification system: Global notification bar with auto-dismiss and manual cancel
-
 ## Project Structure
 
 ```
