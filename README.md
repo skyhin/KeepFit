@@ -1,3 +1,7 @@
+**中文** | [English](#keepfit---ai-calorie-tracking-app)
+
+---
+
 # KeepFit - AI 热量追踪 App
 
 一个基于 Next.js 14+ 的移动端 Web App，通过 AI 视觉识别食物热量，结合 Apple Watch 的消耗数据，实时计算并展示每日的热量赤字情况。
@@ -14,20 +18,6 @@
 - **Runtime**: Vercel Edge Functions
 - **Stream Processing**: 自定义流式响应解析工具
 
-## 设计系统
-
-- **风格**: Apple Health 极简深色模式 (Dark Mode Only)
-- **配色**: 
-  - 背景: `#000000`
-  - 卡片: `#1C1C1E`
-  - 赤字(健康): `#30D158`
-  - 盈余(警告): `#FF453A`
-- **交互**: 
-  - 按钮点击: `scale: 0.95` 回弹效果
-  - 数字变化: CountUp 滚动动画（带小数位支持）
-  - 页面切换: 平滑的 Slide Over 效果
-  - 进度展示: 圆形进度条动画，支持多圈显示
-  - 通知系统: 全局通知栏，支持自动消失和手动取消
 
 ## 项目结构
 
@@ -245,4 +235,254 @@ npm start
    - 详情页显示每餐和每道菜的详细营养成分
    - 删除记录时自动更新营养成分汇总
 
+---
 
+[中文](#keepfit---ai-热量追踪-app) | **English**
+
+---
+
+# KeepFit - AI Calorie Tracking App
+
+A mobile-first Web App built with Next.js 14+ that uses AI vision to identify food calories, combines with Apple Watch consumption data, and calculates and displays daily calorie deficit in real-time.
+
+## Tech Stack
+
+- **Framework**: Next.js 14+ (App Router)
+- **Styling**: Tailwind CSS (Mobile-first)
+- **Animation**: Framer Motion
+- **State Management**: React Context API (Analysis state management)
+- **Storage**: IndexedDB (idb-keyval)
+- **AI SDK**: Vercel AI SDK (ai package)
+- **Icons**: Lucide React
+- **Runtime**: Vercel Edge Functions
+- **Stream Processing**: Custom streaming response parser
+
+## Design System
+
+- **Style**: Apple Health minimalist dark mode (Dark Mode Only)
+- **Color Palette**: 
+  - Background: `#000000`
+  - Card: `#1C1C1E`
+  - Deficit (Healthy): `#30D158`
+  - Surplus (Warning): `#FF453A`
+- **Interactions**: 
+  - Button click: `scale: 0.95` bounce effect
+  - Number changes: CountUp scroll animation (with decimal support)
+  - Page transitions: Smooth Slide Over effect
+  - Progress display: Circular progress bar animation with multi-loop support
+  - Notification system: Global notification bar with auto-dismiss and manual cancel
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── api/
+│   │   └── analyze/
+│   │       └── route.ts          # AI vision analysis API (Edge Runtime)
+│   ├── calendar/
+│   │   └── page.tsx              # Calendar view page
+│   ├── details/
+│   │   └── page.tsx              # Food record details page
+│   ├── settings/
+│   │   └── page.tsx              # User settings page
+│   ├── layout.tsx                # Root layout (includes global state provider)
+│   ├── page.tsx                  # Home dashboard
+│   └── globals.css               # Global styles
+├── components/
+│   ├── CameraButton.tsx          # Camera button component
+│   ├── CountUp.tsx               # Number scroll animation component
+│   ├── StatCard.tsx              # Statistics card component
+│   ├── CircularProgress.tsx      # Circular progress component (goal achievement visualization)
+│   ├── AnalysisNotification.tsx  # Analysis status notification component
+│   └── GlobalAnalysisNotification.tsx  # Global analysis notification component
+├── contexts/
+│   └── AnalysisContext.tsx       # AI analysis state management context
+├── services/
+│   ├── db.ts                     # IndexedDB utility functions
+│   ├── cache.ts                  # Memory cache service (performance boost)
+│   ├── settings.ts               # User settings service
+│   ├── daily.ts                  # Daily record service
+│   └── food.ts                   # Food record service
+├── types/
+│   └── index.ts                  # TypeScript type definitions
+└── utils/
+    └── stream.ts                 # Streaming response parser utility
+```
+
+## Data Architecture
+
+### Store A: user_settings (User Configuration)
+- Key: `USER_SETTINGS`
+- Stores user basic information, calculation baseline, and API configuration
+
+### Store B: daily_summary (Daily Overview)
+- Key: `daily_YYYY-MM-DD`
+- Stores daily aggregated data without images
+
+### Store C: food_records (Food Details)
+- Key: `food_record_${timestamp}_${uuid}`
+- Stores detailed information for each meal, including thumbnails
+
+## Features
+
+### 1. Home Dashboard
+- Real-time display of today's net calories (deficit/surplus)
+- **Circular Progress Bar**: Visualizes goal achievement (supports multi-loop display, Apple Watch style)
+- Basal Metabolic Rate (BMR) display (supports auto-calculation or manual input mode)
+- Dynamic consumption (Apple Watch red ring data) editable input
+- Total consumption and intake statistics
+- **Macronutrient Tracking**: Real-time display of daily intake of carbohydrates, protein, and fat (with icons and animations)
+- One-click food photography for AI analysis
+- **Real-time Analysis Notifications**: Status notifications during analysis with cancel support
+- **Streaming Response Processing**: Real-time AI analysis progress display for better UX
+- **Smart Caching**: 5-minute memory cache for faster data loading
+
+### 2. Settings Page
+- Body profile settings (gender, age, height, weight)
+- **BMR Calculation Mode**:
+  - Auto-calculation mode: Automatically calculates BMR using Mifflin-St Jeor formula
+  - Manual input mode: Allows users to manually set BMR value (suitable for users with professional test data)
+- Target deficit setting
+- AI configuration (BYOK - Bring Your Own Key)
+
+### 3. Calendar View
+- Monthly goal achievement statistics
+- Visual calendar display
+- Daily goal achievement status markers
+
+### 4. Food Record Details
+- View all eating records for a specific day
+- Display food thumbnails (compressed storage to save space)
+- Display total calories and macronutrient information (protein, carbohydrates, fat) for each meal
+- Display detailed nutritional information for each dish
+- Support record deletion (automatically updates daily summary after deletion)
+
+### 5. AI Analysis Features
+- **Streaming Response Processing**: Supports AI streaming data with real-time progress feedback
+- **Cancellable Analysis**: Users can cancel requests at any time during analysis (avoid wasting API calls)
+- **Status Notification System**: Global notifications show analysis status (analyzing/success/failure) with auto-dismiss and manual close
+- **Multi-dish Recognition**: Single analysis can identify multiple dishes and their nutritional information (calories, protein, carbohydrates, fat)
+- **Smart Image Compression**: Automatically compresses uploaded images (max 1MB, 1024px) for faster upload and API response
+- **Error Handling**: Comprehensive error prompts and handling mechanisms with user-friendly feedback
+
+## Installation and Running
+
+```bash
+# Install dependencies
+npm install
+
+# Development mode
+npm run dev
+
+# Build production version
+npm run build
+
+# Start production server
+npm start
+```
+
+## Usage Instructions
+
+1. **First-time Use**:
+   - After opening the app, go to the settings page to configure your user profile
+   - Enter gender, age, height, weight, etc.
+   - Set target deficit (recommended 300-500 kcal/day)
+   - Configure AI API Key (supports OpenAI or compatible APIs)
+
+2. **Daily Use**:
+   - View today's calorie deficit on the home page (circular progress bar shows goal achievement with multi-loop support)
+   - View daily macronutrient intake (carbohydrates, protein, fat)
+   - Click "Edit" button to input Apple Watch dynamic consumption data
+   - If manual BMR mode is enabled, click "Edit" to manually adjust BMR
+   - Click "Capture Food" button to select or take food photos
+   - AI will automatically analyze food and calculate calories and nutrients (notifications shown during analysis, can be cancelled anytime)
+   - After analysis, dashboard data will be automatically updated (including calories and nutrients)
+   - View details page to review all eating records (including images and detailed nutrients for each dish)
+   - View calendar page to understand monthly goal achievement
+
+## API Configuration (BYOK - Bring Your Own Key)
+
+**Fully supports user-defined AI service providers and models**, just configure in the settings page:
+
+### Supported Configuration Items
+
+1. **API Key**: Obtain from any AI service provider
+2. **Base URL**: Service provider's API endpoint address
+3. **Model Name**: Vision-capable model name
+
+### Compatibility
+
+Any service provider's API that **is compatible with OpenAI's format** can be used, including but not limited to:
+
+- **OpenAI**: 
+  - Base URL: `https://api.openai.com/v1`
+  - Models: `gpt-4o`, `gpt-4-vision-preview`, `gpt-4o-mini`, etc.
+  
+- **Alibaba Cloud Tongyi Qianwen**: 
+  - Base URL: `https://dashscope.aliyuncs.com/compatible-mode/v1`
+  - Models: `qwen-vl-max`, `qwen-vl-plus`, etc.
+  
+- **Other OpenAI-compatible services**:
+  - Custom proxy services
+  - Other cloud service providers' OpenAI-compatible APIs
+
+### Important Notes
+
+- Ensure the model used **supports Vision** functionality
+- Base URL must point to an endpoint compatible with OpenAI API format
+- API Key format depends on the service provider (not necessarily starting with `sk-`)
+
+## Notes
+
+- All business data is stored in IndexedDB and not uploaded to the server
+- AI API Key is only used to call AI services and is not stored on the server
+- Images are compressed to thumbnails (200px width, quality 0.5) for storage to save space
+- Images uploaded to AI are further compressed (max 1MB, 1024px) for faster response
+- Regular data backup is recommended (can export IndexedDB via browser developer tools)
+- AI analysis can be cancelled at any time to avoid wasting API calls
+- Supported models must support Vision functionality
+- App uses memory caching (5-minute TTL) for performance, cache automatically invalidates on data updates
+- Manual BMR mode is suitable for users with professional test data (e.g., body fat scale, professional equipment)
+
+## Development Guidelines
+
+- Use TypeScript strict mode
+- All components use 'use client' directive (client components)
+- API routes use Edge Runtime with streaming response support
+- Follow mobile-first design principles
+- All interactions must include animation feedback (Framer Motion)
+- Use Context API for global state management (e.g., analysis state)
+- Image processing uniformly compresses to thumbnails to save storage space
+- Use memory caching to improve data loading performance (5-minute TTL)
+- Error handling should be user-friendly with clear prompts
+- Data persistence uses IndexedDB for offline support
+- Nutritional data automatically aggregates to daily summaries with backward compatibility
+
+## Data Flow
+
+1. **AI Analysis Flow**:
+   - User captures/selects photo → CameraButton component
+   - Calls `/api/analyze` API (streaming response)
+   - Real-time parsing of streaming data → `utils/stream.ts`
+   - Updates AnalysisContext state
+   - Saves to IndexedDB → `services/food.ts`
+   - Automatically refreshes dashboard data
+
+2. **Data Storage Flow**:
+   - User settings → `USER_SETTINGS` key
+   - Daily summary → `daily_YYYY-MM-DD` key (includes total calories and total nutrients)
+   - Food records → `food_record_${timestamp}_${uuid}` key (includes detailed information for each dish)
+
+3. **State Management**:
+   - Global analysis state managed through `AnalysisContext`
+   - Pages access and update state through `useAnalysis` hook
+   - Notification components automatically respond to state changes
+   - Memory cache automatically manages data cache for performance
+
+4. **Macronutrient Tracking Flow**:
+   - AI analysis returns nutrients for each dish (protein, carbohydrates, fat)
+   - Automatically aggregates to food records and daily summaries
+   - Home page displays real-time total daily nutrients
+   - Details page shows nutrients for each meal and dish
+   - Automatically updates nutrient summary when records are deleted
