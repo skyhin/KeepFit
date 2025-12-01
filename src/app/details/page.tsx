@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ import { useAnalysis } from '@/contexts/AnalysisContext';
 // 强制动态渲染，避免构建时预渲染
 export const dynamic = 'force-dynamic';
 
-export default function DetailsPage() {
+function DetailsContent() {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get('date');
   const fromParam = searchParams.get('from');
@@ -200,6 +200,18 @@ export default function DetailsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function DetailsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-gray-400">加载中...</div>
+      </div>
+    }>
+      <DetailsContent />
+    </Suspense>
   );
 }
 
