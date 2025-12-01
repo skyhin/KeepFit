@@ -10,11 +10,21 @@ import { getDateString } from '@/services/db';
 import type { FoodRecord } from '@/types';
 import { useAnalysis } from '@/contexts/AnalysisContext';
 
+// 强制动态渲染，避免构建时预渲染
+export const dynamic = 'force-dynamic';
+
 export default function DetailsPage() {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get('date');
   const fromParam = searchParams.get('from');
-  const [date, setDate] = useState(dateParam || getDateString());
+  
+  // 使用懒初始化，确保只在客户端执行
+  const [date, setDate] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return dateParam || getDateString();
+    }
+    return dateParam || '';
+  });
   
   // 根据来源决定返回链接
   const backHref = fromParam === 'calendar' ? '/calendar' : '/';
@@ -26,11 +36,15 @@ export default function DetailsPage() {
   useEffect(() => {
     if (dateParam) {
       setDate(dateParam);
+    } else if (typeof window !== 'undefined' && !date) {
+      setDate(getDateString());
     }
-  }, [dateParam]);
+  }, [dateParam, date]);
 
   useEffect(() => {
-    loadDetails();
+    if (date) {
+      loadDetails();
+    }
   }, [date]);
 
   const loadDetails = async () => {
